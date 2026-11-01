@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Oath Keeper</title>
+<style>
+:root{--ink:#0f0e14;--dusk:#1a1722;--dusk2:#241f2f;--line:#332d41;--fog:#cfc8dc;--ash:#8f88a1;--eye:#ece9f7;--vow:#8a78c4}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--ink);color:var(--fog);font:14px/1.5 "Segoe UI",system-ui,sans-serif;overflow:hidden}
+button,select,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--eye);outline-offset:2px}
+.app{display:grid;grid-template-columns:minmax(0,1fr) 330px;grid-template-rows:minmax(0,1fr) auto;height:100%}
+main{overflow:auto;padding-bottom:28px}
+aside{border-left:1px solid var(--line);background:var(--dusk);display:flex;flex-direction:column;min-height:0}
+.hero{position:relative;min-height:260px;padding:48px 44px 30px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero img{position:absolute;right:0;top:0;height:100%;width:54%;object-fit:cover;object-position:50% 20%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)}
+.hero>*:not(img){position:relative}
+h1{font:600 52px/1.05 "Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;letter-spacing:.01em;color:var(--eye)}
+.hero p{margin:10px 0 22px;max-width:30ch;color:var(--ash);font-family:Georgia,serif;font-style:italic;font-size:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:rgba(15,14,20,.6)}
+.btn:hover{border-color:var(--ash)}
+.btn.pri{background:var(--eye);color:var(--ink);border-color:var(--eye);font-weight:600}
+section{padding:26px 44px 0}
+h2{font:600 22px Georgia,serif;color:var(--eye);margin-bottom:12px}
+h2 small{font:13px "Segoe UI",sans-serif;color:var(--ash);margin-left:10px}
+.empty{color:var(--ash);padding:6px 0}
+.vow{height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.vow i{display:block;height:100%;background:linear-gradient(90deg,var(--vow),var(--eye))}
+.cont{display:flex;gap:18px;align-items:center;background:var(--dusk);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.cont .t{flex:1;min-width:0}
+.cont b,.book b{display:block;font:600 17px Georgia,serif;color:var(--eye);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cont span,.book span{color:var(--ash);font-size:13px}
+.cont .vow{margin-top:10px}
+.book{display:grid;grid-template-columns:1fr 150px auto;gap:18px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.book.on b{color:var(--vow)}
+.book>div:first-child{min-width:0}
+.book .vow{margin-bottom:5px}
+.ic{width:34px;height:34px;border-radius:50%;display:inline-grid;place-items:center;color:var(--ash)}
+.ic:hover{background:var(--dusk2);color:var(--eye)}
+ol{list-style:none;padding:0}
+ol li{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid var(--line)}
+ol li span{color:var(--ash);white-space:nowrap}
+aside h3{font:600 18px Georgia,serif;color:var(--eye);padding:20px 20px 2px}
+aside .sub{padding:0 20px 12px;color:var(--ash);border-bottom:1px solid var(--line)}
+#chs{overflow:auto;flex:1;padding:6px 8px}
+#chs button{display:flex;width:100%;justify-content:space-between;gap:10px;text-align:left;padding:9px 12px;border-radius:8px}
+#chs button:hover{background:var(--dusk2)}
+#chs .on{background:var(--dusk2);color:var(--eye);box-shadow:inset 3px 0 var(--vow)}
+#chs .dn{color:var(--ash)}
+footer{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:center;padding:12px 20px;border-top:1px solid var(--line);background:var(--dusk)}
+.now{display:flex;gap:12px;align-items:center;min-width:0}
+.now img{width:48px;height:48px;border-radius:8px;object-fit:cover;object-position:50% 20%}
+.now div{min-width:0}.now b,.now span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now span{color:var(--ash);font-size:13px}
+.ctl{display:flex;flex-direction:column;gap:4px;align-items:center}
+.tr{display:flex;gap:6px;align-items:center}
+.tr small{color:var(--ash);font-size:12px}
+#pp{width:46px;height:46px;border-radius:50%;background:var(--eye);color:var(--ink);display:grid;place-items:center}
+.seek{display:flex;gap:10px;width:100%;align-items:center;font-size:12px;color:var(--ash)}
+input[type=range]{flex:1;accent-color:var(--vow);height:16px;background:none}
+.opt{display:flex;gap:10px;justify-content:flex-end;align-items:center}
+select{background:var(--dusk2);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+#vol{max-width:90px;flex:none}
+#drop{position:fixed;inset:14px;border:2px dashed var(--eye);border-radius:18px;background:rgba(15,14,20,.88);display:none;place-items:center;font:600 28px Georgia,serif;color:var(--eye);z-index:9;pointer-events:none}
+#drop.on{display:grid}
+#toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--eye);color:var(--ink);padding:9px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+@media(max-width:860px){.app{grid-template-columns:1fr}aside{display:none}footer{grid-template-columns:1fr}.opt,.now{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body>
+<div class="app">
+<main>
+ <div class="hero"><img src="cover.jpg" alt="">
+  <h1>The Oath Keeper</h1><p>Every book, every chapter, kept exactly where you left it. Drop files or folders anywhere in this window.</p>
+  <div class="row"><button class="btn pri" id="addF">Add audiobook files</button><button class="btn" id="addD">Add folder</button></div></div>
+ <section><h2>Continue listening</h2><div id="cont"></div></section>
+ <section><h2>Library</h2><div id="lib"></div></section>
+ <section><h2>Played recently<small><button id="clr" class="btn" style="padding:2px 12px">Clear history</button></small></h2><ol id="hist"></ol></section>
+</main>
+<aside><h3 id="ab">Chapters</h3><div class="sub" id="as">Open a book to see its chapters.</div><div id="chs"></div></aside>
+<footer>
+ <div class="now"><img src="cover.jpg" alt=""><div><b id="np">Nothing playing</b><span id="nc">Add an audiobook to begin</span></div></div>
+ <div class="ctl"><div class="tr">
+  <button class="ic" id="pv" aria-label="Previous chapter"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM9.5 12l8.5 6V6z"/></svg></button>
+  <button class="ic" id="bk" aria-label="Back 15 seconds"><small>-15</small></button>
+  <button id="pp" aria-label="Play"></button>
+  <button class="ic" id="fw" aria-label="Forward 30 seconds"><small>+30</small></button>
+  <button class="ic" id="nx" aria-label="Next chapter"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/></svg></button></div>
+  <div class="seek"><span id="tc">0:00</span><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Seek"><span id="td">0:00</span></div></div>
+ <div class="opt">
+  <select id="spd" aria-label="Speed"><option>0.75</option><option>1</option><option>1.25</option><option>1.5</option><option>1.75</option><option>2</option></select>
+  <select id="sleep" aria-label="Sleep timer"><option value="0">No sleep timer</option><option value="15">Sleep in 15 min</option><option value="30">Sleep in 30 min</option><option value="60">Sleep in 60 min</option><option value="c">Sleep after chapter</option></select>
+  <input type="range" id="vol" min="0" max="1" step=".05" aria-label="Volume"></div>
+</footer></div>
+<div id="drop">Drop audiobooks or folders to play</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fi" multiple accept="audio/*,.m4b" hidden><input type="file" id="di" webkitdirectory hidden>
+<script>
+const $=s=>document.querySelector(s),D=window.oath||null,KEY='oath.v1';
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+S=Object.assign({books:[],hist:[],cur:null,speed:1,vol:1},S||{});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const FILES={},A=new Audio(),AUD=/\.(mp3|m4a|m4b|aac|ogg|opus|wav|flac|wma)$/i;
+A.preload='metadata';A.volume=S.vol;A.playbackRate=S.speed;
+let pend=0,sleepT=0,lastLog='',tick=0,seeking=false,tt=0;
+const PL='<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',PA='<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+const book=id=>S.books.find(b=>b.id===id),cb=()=>book(S.cur);
+const pad=n=>String(n).padStart(2,'0');
+const fmt=s=>{if(!isFinite(s)||s<0)return'0:00';s=Math.floor(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return(h?h+':'+pad(m):m)+':'+pad(s%60)};
+const ago=t=>{const m=Math.round((Date.now()-t)/6e4);if(m<1)return'just now';if(m<60)return m+' min ago';const h=Math.round(m/60);return h<24?h+' h ago':new Date(t).toLocaleDateString()};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clean=n=>n.replace(/\.[^.]+$/,'').replace(/_+/g,' ');
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),3500)}
+
+function srcOf(b,i){const f=b.files[i];
+ if(D){if(!f.p)return'';const p=f.p.replace(/\\/g,'/');return'file://'+(p[0]==='/'?'':'/')+encodeURI(p).replace(/#/g,'%23').replace(/\?/g,'%3F')}
+ const F=FILES[b.id];return F&&F[i]?(F[i]._u||(F[i]._u=URL.createObjectURL(F[i]))):''}
+function pct(b){if(b.fin)return 100;const f=b.files[b.ci],t=(b.id===S.cur&&A.src)?A.currentTime:b.t;return Math.round(Math.min(1,(b.ci+(f.d?Math.min(1,t/f.d):0))/b.files.length)*100)}
+
+function addBook(title,files){
+ if(!files.length){toast('No audio files found there.');return}
+ files.sort((a,b)=>(a.p||a.n).localeCompare(b.p||b.n,undefined,{numeric:true}));
+ const key=files.map(f=>f.n+':'+f.sz).join('|');let b=S.books.find(x=>x.key===key);
+ if(!b){b={id:'b'+Date.now().toString(36),key,title,files:files.map(f=>({n:f.n,sz:f.sz,p:f.p||null,d:0,done:false})),ci:0,t:0,last:0};S.books.push(b)}
+ else if(D)b.files.forEach((x,i)=>x.p=files[i].p);
+ if(!D)FILES[b.id]=files.map(f=>f.f);
+ save();open(b.id,true)}
+function open(id,play,quiet){const b=book(id);if(!b)return;
+ if(play&&b.fin){b.ci=0;b.t=0;b.fin=false;b.files.forEach(f=>f.done=false)}
+ S.cur=id;save();load(b.ci,b.t,play,quiet)}
+function load(i,t,play,quiet){const b=cb();if(!b)return;b.ci=i;lastLog='';
+ const u=srcOf(b,i);
+ if(!u){A.removeAttribute('src');if(!quiet)toast(D?'This file was moved or deleted. Add the book again.':'Add this book\u2019s files again to continue where you stopped.');all();return}
+ pend=t||0;A.src=u;A.playbackRate=S.speed;all();meta();if(play)A.play().catch(()=>{})}
+
+A.addEventListener('loadedmetadata',()=>{const b=cb();if(!b)return;if(pend&&pend<A.duration-2)A.currentTime=pend;pend=0;b.files[b.ci].d=A.duration;save();all()});
+A.addEventListener('play',()=>{logPlay();ui()});
+A.addEventListener('pause',()=>{keep();ui();lib()});
+A.addEventListener('timeupdate',()=>{ui();if(Date.now()-tick>4000){tick=Date.now();keep()}});
+A.addEventListener('ended',()=>{const b=cb();if(!b)return;b.files[b.ci].done=true;b.t=0;
+ const stop=$('#sleep').value==='c';if(stop)$('#sleep').value='0';
+ if(b.ci<b.files.length-1)load(b.ci+1,0,!stop);else{b.fin=true;b.last=Date.now();save();all()}});
+function keep(){const b=cb();if(!b||!A.src||pend)return;b.t=A.currentTime||0;b.last=Date.now();save()}
+addEventListener('beforeunload',keep);
+function logPlay(){const b=cb();if(!b)return;const k=b.id+':'+b.ci;if(k===lastLog)return;lastLog=k;
+ const n=clean(b.files[b.ci].n);S.hist=S.hist.filter(h=>!(h.id===b.id&&h.ch===n&&Date.now()-h.at<6e5));
+ S.hist.unshift({id:b.id,title:b.title,ch:n,at:Date.now()});S.hist=S.hist.slice(0,100);b.last=Date.now();save();hist();cont()}
+
+const toggle=()=>{if(A.src)A.paused?A.play().catch(()=>{}):A.pause()};
+const skip=d=>{if(A.src)A.currentTime=Math.max(0,Math.min(A.duration||1e9,A.currentTime+d))};
+const go=d=>{const b=cb();if(!b)return;const i=b.ci+d;if(i<0){skip(-1e9);return}if(i<b.files.length)load(i,0,true)};
+$('#pp').onclick=toggle;$('#bk').onclick=()=>skip(-15);$('#fw').onclick=()=>skip(30);$('#pv').onclick=()=>go(-1);$('#nx').onclick=()=>go(1);
+$('#seek').onpointerdown=()=>seeking=true;
+$('#seek').oninput=e=>{if(A.duration)A.currentTime=e.target.value/1000*A.duration};
+$('#seek').onchange=()=>seeking=false;
+$('#spd').onchange=e=>{S.speed=+e.target.value;A.playbackRate=S.speed;save()};
+$('#vol').oninput=e=>{A.volume=S.vol=+e.target.value;save()};
+$('#sleep').onchange=e=>{clearTimeout(sleepT);const v=e.target.value;if(v!=='0'&&v!=='c')sleepT=setTimeout(()=>{A.pause();$('#sleep').value='0';toast('Sleep timer ended. Playback paused.')},v*6e4)};
+addEventListener('keydown',e=>{if(/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName)&&e.target.type!=='range'&&e.code==='Space')return;
+ if(e.code==='Space'){e.preventDefault();toggle()}else if(e.code==='ArrowLeft'&&e.target.type!=='range')skip(-15);else if(e.code==='ArrowRight'&&e.target.type!=='range')skip(30)});
+
+$('#addF').onclick=async()=>{if(D){const r=await D.pickFiles();if(r)addBook(r.title||clean(r.files[0].n),r.files)}else $('#fi').click()};
+$('#addD').onclick=async()=>{if(D){const r=await D.pickFolder();if(r)addBook(r.title,r.files)}else $('#di').click()};
+$('#fi').onchange=e=>{const fs=[...e.target.files].filter(f=>AUD.test(f.name)||f.type.startsWith('audio'));e.target.value='';if(fs.length)addBook(clean(fs[0].name),fs.map(f=>({n:f.name,sz:f.size,f})))else toast('No audio files found there.')};
+$('#di').onchange=e=>{const all=[...e.target.files],fs=all.filter(f=>AUD.test(f.name));e.target.value='';
+ if(fs.length)addBook((fs[0].webkitRelativePath||'').split('/')[0]||clean(fs[0].name),fs.map(f=>({n:f.name,sz:f.size,p:null,f})));else toast('No audio files found there.')};
+addEventListener('error',e=>toast('Error: '+e.message));
+addEventListener('dragenter',e=>{e.preventDefault();$('#drop').classList.add('on')});
+addEventListener('dragover',e=>e.preventDefault());
+addEventListener('dragleave',e=>{if(!e.relatedTarget)$('#drop').classList.remove('on')});
+addEventListener('drop',async e=>{e.preventDefault();$('#drop').classList.remove('on');const dt=e.dataTransfer;if(!dt)return;
+ if(D){const ps=[...dt.files].map(f=>D.pathOf(f)).filter(Boolean);const r=await D.expand(ps);
+  if(r&&r.files.length)addBook(r.title||clean(r.files[0].n),r.files);else toast('No audio files found in what you dropped.');return}
+ const items=[...dt.items].map(i=>i.webkitGetAsEntry&&i.webkitGetAsEntry()).filter(Boolean),out=[];
+ const walk=async en=>{if(en.isFile){const f=await new Promise(r=>en.file(r,()=>r(null)));if(f&&AUD.test(f.name))out.push({n:f.name,sz:f.size,p:null,f})}
+  else if(en.isDirectory){const rd=en.createReader();let list=[];for(;;){const b=await new Promise(r=>rd.readEntries(r,()=>r([])));if(!b.length)break;list=list.concat(b)}for(const c of list)await walk(c)}};
+ for(const en of items)await walk(en);
+ const dir=items.find(i=>i.isDirectory);addBook(dir?dir.name:clean(out.length?out[0].n:'Audiobook'),out)});
+$('#clr').onclick=()=>{S.hist=[];save();hist()};
+
+function meta(){const b=cb();if(!b||!('mediaSession'in navigator))return;
+ try{navigator.mediaSession.metadata=new MediaMetadata({title:clean(b.files[b.ci].n),artist:b.title,album:'The Oath Keeper',artwork:[{src:'cover.jpg',sizes:'736x736',type:'image/jpeg'}]})}catch(e){}}
+if('mediaSession'in navigator)[['play',()=>A.play()],['pause',()=>A.pause()],['previoustrack',()=>go(-1)],['nexttrack',()=>go(1)],['seekbackward',()=>skip(-15)],['seekforward',()=>skip(30)]].forEach(([a,f])=>{try{navigator.mediaSession.setActionHandler(a,f)}catch(e){}});
+
+function ui(){const b=cb();
+ $('#pp').innerHTML=A.paused?PL:PA;$('#pp').setAttribute('aria-label',A.paused?'Play':'Pause');
+ $('#tc').textContent=fmt(A.currentTime);$('#td').textContent=fmt(A.duration);
+ if(!seeking)$('#seek').value=A.duration?A.currentTime/A.duration*1000:0;
+ $('#np').textContent=b?b.title:'Nothing playing';$('#nc').textContent=b?clean(b.files[b.ci].n):'Add an audiobook to begin'}
+function cont(){const b=[...S.books].filter(x=>x.last).sort((a,c)=>c.last-a.last)[0];
+ $('#cont').innerHTML=b?`<div class="cont"><div class="t"><b>${esc(b.title)}</b><span>${esc(clean(b.files[b.ci].n))}, ${b.fin?'finished':'stopped at '+fmt(b.id===S.cur&&A.src?A.currentTime:b.t)} (${ago(b.last)})</span><div class="vow"><i style="width:${pct(b)}%"></i></div></div><button class="btn pri" data-play="${b.id}">${b.id===S.cur&&!A.paused?'Playing':b.fin?'Listen again':'Resume'}</button></div>`:'<p class="empty">Nothing played yet. Add an audiobook above and press play.</p>'}
+function lib(){$('#lib').innerHTML=S.books.length?S.books.map(b=>`<div class="book${b.id===S.cur?' on':''}"><div><b>${esc(b.title)}</b><span>${b.files.length} chapter${b.files.length>1?'s':''}${b.last?', last played '+ago(b.last):''}</span></div><div><div class="vow"><i style="width:${pct(b)}%"></i></div><span>${pct(b)}% heard</span></div><div><button class="btn" data-play="${b.id}">${b.id===S.cur&&!A.paused?'Pause':'Play'}</button> <button class="ic" data-del="${b.id}" aria-label="Remove ${esc(b.title)}"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6z"/></svg></button></div></div>`).join(''):'<p class="empty">No audiobooks yet. Add files or a whole folder and they stay here.</p>'}
+function hist(){$('#hist').innerHTML=S.hist.length?S.hist.slice(0,30).map(h=>`<li><div>${esc(h.ch)} <span>from ${esc(h.title)}</span></div><span>${ago(h.at)}</span></li>`).join(''):'<li class="empty">Chapters you play will be listed here.</li>'}
+function chs(){const b=cb();$('#ab').textContent=b?b.title:'Chapters';$('#as').textContent=b?b.files.length+' chapter'+(b.files.length>1?'s':'')+', '+pct(b)+'% heard':'Open a book to see its chapters.';
+ $('#chs').innerHTML=b?b.files.map((f,i)=>`<button data-ch="${i}" class="${i===b.ci?'on':f.done?'dn':''}"><span>${esc(clean(f.n))}</span><span>${f.done?'Heard':f.d?fmt(f.d):''}</span></button>`).join(''):''}
+function all(){cont();lib();hist();chs();ui()}
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+ if(t.dataset.play){if(t.dataset.play===S.cur&&A.src)toggle();else open(t.dataset.play,true)}
+ else if(t.dataset.del){const b=book(t.dataset.del);if(b&&confirm('Remove "'+b.title+'" from your library? Your audio files are not deleted.')){if(S.cur===b.id){A.pause();A.removeAttribute('src');S.cur=null}S.books=S.books.filter(x=>x!==b);S.hist=S.hist.filter(h=>h.id!==b.id);save();all()}}
+ else if(t.dataset.ch!==undefined)load(+t.dataset.ch,0,true)});
+A.addEventListener('play',()=>{cont();lib()});
+$('#spd').value=S.speed;$('#vol').value=S.vol;
+if(S.cur&&book(S.cur))open(S.cur,false,true);else all();
+</script></body></html>
